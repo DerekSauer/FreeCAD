@@ -677,11 +677,9 @@ static QCursor createCursor(QBitmap& bitmap, QBitmap& mask, int hotX, int hotY, 
     else {
         pixmap = bitmap;
     }
-    pixmap.setMask(mask);
-    return QCursor(pixmap, hotX, hotY);
-#else
-    return QCursor(bitmap, mask, hotX, hotY);
 #endif
+
+    return QCursor(bitmap, mask, hotX, hotY);
 }
 
 void View3DInventorViewer::createStandardCursors(double dpr)
