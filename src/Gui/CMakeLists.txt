@@ -1010,7 +1010,6 @@ SET(Inventor_CPP_SRCS
     Inventor/SoAutoZoomTranslation.cpp
     Inventor/MarkerBitmaps.cpp
     Inventor/SmSwitchboard.cpp
-    SoFCBackgroundGradient.cpp
     SoFCBoundingBox.cpp
     SoFCColorBar.cpp
     SoFCColorBarNotifier.cpp
@@ -1041,7 +1040,6 @@ SET(Inventor_SRCS
     Inventor/SoAutoZoomTranslation.h
     Inventor/MarkerBitmaps.h
     Inventor/SmSwitchboard.h
-    SoFCBackgroundGradient.h
     SoFCBoundingBox.h
     SoFCColorBar.h
     SoFCColorBarNotifier.h
