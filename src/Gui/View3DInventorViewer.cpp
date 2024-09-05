@@ -1245,22 +1245,24 @@ void View3DInventorViewer::handleEventCB(void* userdata, SoEventCallback* n)
     SoGLWidgetElement::set(action->getState(), qobject_cast<QtGLWidget*>(that->getGLWidget()));
 }
 
-void View3DInventorViewer::setGradientBackground(View3DInventorViewer::Background /* grad */)
-{}
+void View3DInventorViewer::setGradientBackground(View3DInventorViewer::Background new_style)
+{
+    this->background_style = new_style;
+}
 
 View3DInventorViewer::Background View3DInventorViewer::getGradientBackground() const
 {
-    return Background::RadialGradient;
+    return this->background_style;
 }
 
-void View3DInventorViewer::setGradientBackgroundColor(const SbColor& /* fromColor */,
-                                                      const SbColor& /* toColor */)
-{}
-
-void View3DInventorViewer::setGradientBackgroundColor(const SbColor& /* fromColor */,
-                                                      const SbColor& /* toColor */,
-                                                      const SbColor& /* midColor */)
-{}
+void View3DInventorViewer::setGradientBackgroundColor(const QColor& from_color,
+                                                      const QColor& to_color,
+                                                      const std::optional<QColor>& mid_color)
+{
+    this->gradient_from_color = from_color;
+    this->gradient_to_color = to_color;
+    this->gradient_mid_color = mid_color;
+}
 
 void View3DInventorViewer::setEnabledFPSCounter(bool on)
 {
@@ -2260,6 +2262,24 @@ void View3DInventorViewer::renderScene()
     SbVec2s origin = vp.getViewportOriginPixels();
     SbVec2s size = vp.getViewportSizePixels();
     glViewport(origin[0], origin[1], size[0], size[1]);
+
+    // Clear the screen by rendering the appropriate background.
+    switch (this->getGradientBackground()) {
+        // Single color backgrounds can be simply cleared.
+        case Background::NoGradient: {
+            auto bg_color = this->backgroundColor();
+            glClearColor(bg_color.redF(), bg_color.greenF(), bg_color.blueF(), 1.0F);
+            glClear(GL_COLOR_BUFFER_BIT);
+        } break;
+
+        case Background::LinearGradient: {
+
+        } break;
+
+        case Background::RadialGradient: {
+
+        } break;
+    }
 
     glClear(GL_DEPTH_BUFFER_BIT);
     glEnable(GL_DEPTH_TEST);

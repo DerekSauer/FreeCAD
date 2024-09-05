@@ -434,10 +434,9 @@ public:
 
     void setGradientBackground(Background);
     Background getGradientBackground() const;
-    void setGradientBackgroundColor(const SbColor& fromColor, const SbColor& toColor);
-    void setGradientBackgroundColor(const SbColor& fromColor,
-                                    const SbColor& toColor,
-                                    const SbColor& midColor);
+    void setGradientBackgroundColor(const QColor& from_color,
+                                    const QColor& to_color,
+                                    const std::optional<QColor>& mid_color = std::nullopt);
     void setNavigationType(Base::Type);
 
     void setAxisLetterColor(const SbColor& color);
@@ -515,6 +514,18 @@ private:
     SoSeparator* backgroundroot;
     SoSeparator* foregroundroot;
     SoDirectionalLight* backlight;
+
+    /// Style of background to draw when clearing the screen (Solid, Linear or Radial gradient).
+    Background background_style;
+
+    /// Start color for gradient background styles.
+    QColor gradient_from_color;
+
+    /// End color for gradient background styles.
+    QColor gradient_to_color;
+
+    /// Optional middle color for gradient background styles.
+    std::optional<QColor> gradient_mid_color;
 
     // Scene graph root
     SoSeparator* pcViewProviderRoot;
