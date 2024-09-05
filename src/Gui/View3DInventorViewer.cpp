@@ -2269,9 +2269,8 @@ void View3DInventorViewer::renderScene()
     SbVec2s size = vp.getViewportSizePixels();
     glViewport(origin[0], origin[1], size[0], size[1]);
 
-    // Solid color backgrounds can be rendered with a simple glClear().
-    // Gradient backgrounds call out to the appropriate gradient background renderer.
     switch (this->getGradientBackground()) {
+        // Single color backgrounds can be simply cleared.
         case Background::NoGradient: {
             auto bg_color = this->backgroundColor();
             glClearColor(bg_color.redF(), bg_color.greenF(), bg_color.blueF(), 1.0F);
