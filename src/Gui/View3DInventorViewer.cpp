@@ -96,6 +96,7 @@
 #include <Quarter/eventhandlers/EventFilter.h>
 
 #include "View3DInventorViewer.h"
+#include "View3DGradientBackground.h"
 #include "Application.h"
 #include "Document.h"
 #include "GLPainter.h"
@@ -552,7 +553,7 @@ void View3DInventorViewer::init()
     setViewing(false);
 
     setBackgroundColor(QColor(25, 25, 25));  // NOLINT
-    setGradientBackground(Background::LinearGradient);
+    setGradientBackground(Background::NoGradient);
 
     // set some callback functions for user interaction
     addStartCallback(interactionStartCB);
@@ -584,6 +585,8 @@ void View3DInventorViewer::init()
 
     naviCube = new NaviCube(this);
     naviCubeEnabled = true;
+
+    gradient_background = std::make_unique<View3DGradientBackground>(this);
 }
 
 View3DInventorViewer::~View3DInventorViewer()
@@ -1259,9 +1262,7 @@ void View3DInventorViewer::setGradientBackgroundColor(const QColor& from_color,
                                                       const QColor& to_color,
                                                       const std::optional<QColor>& mid_color)
 {
-    this->gradient_from_color = from_color;
-    this->gradient_to_color = to_color;
-    this->gradient_mid_color = mid_color;
+    gradient_background->set_gradient_colors(from_color, to_color, mid_color);
 }
 
 void View3DInventorViewer::setEnabledFPSCounter(bool on)
@@ -2254,6 +2255,9 @@ void View3DInventorViewer::renderGLImage()
 // upon spin.
 void View3DInventorViewer::renderScene()
 {
+    // Ensure this viewer's GL context is current before rendering a frame.
+    qobject_cast<QtGLWidget*>(this->getGLWidget())->makeCurrent();
+
     // Must set up the OpenGL viewport manually, as upon resize
     // operations, Coin won't set it up until the SoGLRenderAction is
     // applied again. And since we need to do glClear() before applying
@@ -2263,9 +2267,9 @@ void View3DInventorViewer::renderScene()
     SbVec2s size = vp.getViewportSizePixels();
     glViewport(origin[0], origin[1], size[0], size[1]);
 
-    // Clear the screen by rendering the appropriate background.
+    // Solid color backgrounds can be rendered with a simple glClear().
+    // Gradient backgrounds call out to the appropriate gradient background renderer.
     switch (this->getGradientBackground()) {
-        // Single color backgrounds can be simply cleared.
         case Background::NoGradient: {
             auto bg_color = this->backgroundColor();
             glClearColor(bg_color.redF(), bg_color.greenF(), bg_color.blueF(), 1.0F);
@@ -2273,11 +2277,11 @@ void View3DInventorViewer::renderScene()
         } break;
 
         case Background::LinearGradient: {
-
+            this->gradient_background->draw_linear_gradient();
         } break;
 
         case Background::RadialGradient: {
-
+            this->gradient_background->draw_radial_gradient();
         } break;
     }
 

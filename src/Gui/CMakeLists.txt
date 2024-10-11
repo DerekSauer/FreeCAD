@@ -864,6 +864,7 @@ SET(View3D_CPP_SRCS
     GestureNavigationStyle.cpp
     SplitView3DInventor.cpp
     View.cpp
+    View3DGradientBackground.cpp
     View3DInventor.cpp
     View3DInventorSelection.cpp
     View3DInventorViewer.cpp
@@ -888,6 +889,7 @@ SET(View3D_SRCS
     GestureNavigationStyle.h
     SplitView3DInventor.h
     View.h
+    View3DGradientBackground.h
     View3DInventor.h
     View3DInventorSelection.h
     View3DInventorViewer.h

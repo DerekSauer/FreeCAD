@@ -77,6 +77,7 @@ class Document;
 class GLGraphicsItem;
 class SoShapeScale;
 class ViewerEventFilter;
+class View3DGradientBackground;
 
 /** GUI view into a 3D scene provided by View3DInventor
  *
@@ -518,14 +519,8 @@ private:
     /// Style of background to draw when clearing the screen (Solid, Linear or Radial gradient).
     Background background_style;
 
-    /// Start color for gradient background styles.
-    QColor gradient_from_color;
-
-    /// End color for gradient background styles.
-    QColor gradient_to_color;
-
-    /// Optional middle color for gradient background styles.
-    std::optional<QColor> gradient_mid_color;
+    /// Rendering helper to draw smooth gradient backgrounds.
+    std::unique_ptr<View3DGradientBackground> gradient_background;
 
     // Scene graph root
     SoSeparator* pcViewProviderRoot;
